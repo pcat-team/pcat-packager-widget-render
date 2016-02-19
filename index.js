@@ -1,3 +1,7 @@
+var path = require("path");
+
+var projectPath = fis.project.getProjectPath();
+
 //匹配标签的属性和值 k=v
 var prostr = /(\S+)\s*\=\s*("[^"]*")|('[^']*')/gi;
 // 获取属性对象
@@ -24,15 +28,11 @@ function extend(target, object) {
 var propReg = /{{([^{}]+)}}/gmi;
 
 
-
-var projectPath = fis.project.getProjectPath();
-
 module.exports = function(ret, conf, settings, opt) {
 
-    console.log(settings)
+    var tagName = settings.tagName,
+        mapOutputPath = settings.mapOutputPath;
 
-    var tagName = settings.tagName || "widget",
-        outputPath = settings.outputPath || "../../_output";
 
     // 匹配组件标签
     var regString = "(<(" + tagName + "_\\d)([^>]+)*>)((.|\n)*)(<\\/\\2>)";
@@ -134,16 +134,37 @@ module.exports = function(ret, conf, settings, opt) {
     // 获取其他系统的依赖表
     function requireOhteProjectDeps(project, dep) {
 
-        var version = require(projectPath + "/../" + project + "/package.json").version;
+        
         var media = fis.project.currentMedia() || "dev";
 
-        // 跨系统获取资源依赖表
-        var mapPath = projectPath + "/" + outputPath + "/" + media + "/map/" + project + "/" + version + "/map.json";
+        var version = getProjectVersion(project);
+
+          // 解析跨系统资源依赖表路径
+        var mapPath = path.resolve(mapOutputPath,project,version,"map.json");
 
 
+        if(!fis.util.exists(mapPath)){
+            fis.log.error('unable to load map.json [%s]', mapPath)
+        }
+
+        // 获取跨系统获取资源依赖表
         var map = require(mapPath);
 
         return map;
+    }
+
+    // 获取指定项目的版本
+    function getProjectVersion(project){
+        
+        var packagePath = path.resolve(projectPath,"..",project,"package.json");
+
+        if(!fis.util.exists(packagePath)){
+            fis.log.error('unable to load package.json [%s]', packagePath)
+        }
+
+        var version = require(packagePath).version;
+        
+        return version;
     }
 
 }

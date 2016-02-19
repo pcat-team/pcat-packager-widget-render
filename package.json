@@ -1,11 +1,19 @@
 {
   "name": "fis3-package-widget-render",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "guoxmin",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guoxmin/fis3-packager-widget-render.git"
+  },
+  "bugs": {
+    "url": "https://github.com/guoxmin/fis3-packager-widget-render/issues"
+  },
+  "homepage": "https://github.com/guoxmin/fis3-packager-widget-render#readme",
+  "description": ""
 }
