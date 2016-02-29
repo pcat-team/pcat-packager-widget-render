@@ -80,15 +80,17 @@ module.exports = function(ret, conf, settings, opt) {
             if (tag) {
                 var propsData = getPropsObj($3);
 
-                var cache;
+                var cache = {};
 
-                var holder = "__PCAT_WIDGET__";
+                var holder = "__PCAT_WIDGET__",
+                    count = 0;
 
                 // 暂时替换组件标签的内容，避免被渲染
                 var _content = $4.replace(pattern, function(tag, $1, $2, $3, $4, $5, $6) {
-                    cache = $4;
+                    var _holder = holder + (count++);
+                    cache[_holder] = $4;
+                    return $1 + _holder + $6;
 
-                    if (tag) return $1 + holder + $6;
                 })
 
                 // 渲染组件
@@ -98,8 +100,12 @@ module.exports = function(ret, conf, settings, opt) {
 
                 })
 
+
                 // 恢复组件刚被替换的内容，继续递归渲染
-                tag = tag.replace(holder, cache)
+
+                Object.keys(cache).forEach(function(key, index) {
+                    tag = tag.replace(key, cache[key])
+                });
 
 
                 return render(tag);
@@ -134,16 +140,16 @@ module.exports = function(ret, conf, settings, opt) {
     // 获取其他系统的依赖表
     function requireOhteProjectDeps(project, dep) {
 
-        
+
         var media = fis.project.currentMedia() || "dev";
 
         var version = getProjectVersion(project);
 
-          // 解析跨系统资源依赖表路径
-        var mapPath = path.resolve(mapOutputPath,project,version,"map.json");
+        // 解析跨系统资源依赖表路径
+        var mapPath = path.resolve(mapOutputPath, project, version, "map.json");
 
 
-        if(!fis.util.exists(mapPath)){
+        if (!fis.util.exists(mapPath)) {
             fis.log.error('unable to load map.json [%s]', mapPath)
         }
 
@@ -154,16 +160,16 @@ module.exports = function(ret, conf, settings, opt) {
     }
 
     // 获取指定项目的版本
-    function getProjectVersion(project){
-        
-        var packagePath = path.resolve(projectPath,"..",project,"package.json");
+    function getProjectVersion(project) {
 
-        if(!fis.util.exists(packagePath)){
+        var packagePath = path.resolve(projectPath, "..", project, "package.json");
+
+        if (!fis.util.exists(packagePath)) {
             fis.log.error('unable to load package.json [%s]', packagePath)
         }
 
         var version = require(packagePath).version;
-        
+
         return version;
     }
 
