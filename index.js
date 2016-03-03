@@ -35,7 +35,7 @@ module.exports = function(ret, conf, settings, opt) {
 
 
     // 匹配组件标签
-    var regString = "(<(" + tagName + "_\\d)([^>]+)*>)((.|\n)*)(<\\/\\2>)";
+    var regString = "(<(" + tagName + "_\\d)([^>]+)*>)((.|\\n|\\r)*)(<\\/\\2>)";
 
     var pattern = new RegExp(regString, "gim");
 
