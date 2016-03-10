@@ -1,19 +1,19 @@
 {
-  "name": "fis3-packager-widget-render",
-  "version": "1.0.4",
+  "name": "pcat-packager-widget-render",
+  "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "guoxmin",
-  "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/guoxmin/fis3-packager-widget-render.git"
+    "url": "git+https://github.com/pcat-team/pcat-packager-widget-render.git"
   },
+  "author": "guoxmin",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/guoxmin/fis3-packager-widget-render/issues"
+    "url": "https://github.com/pcat-team/pcat-packager-widget-render/issues"
   },
-  "homepage": "https://github.com/guoxmin/fis3-packager-widget-render#readme",
-  "description": ""
+  "homepage": "https://github.com/pcat-team/pcat-packager-widget-render#readme"
 }

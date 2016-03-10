@@ -31,7 +31,8 @@ var propReg = /{{([^{}]+)}}/gmi;
 module.exports = function(ret, conf, settings, opt) {
 
     var tagName = settings.tagName,
-        mapOutputPath = settings.mapOutputPath;
+        mapOutputPath = settings.mapOutputPath,
+         packageOutputPath = settings.packageOutputPath;
 
 
     // 匹配组件标签
@@ -162,7 +163,8 @@ module.exports = function(ret, conf, settings, opt) {
     // 获取指定项目的版本
     function getProjectVersion(project) {
 
-        var packagePath = path.resolve(projectPath, "..", project, "package.json");
+
+        var packagePath = path.resolve(packageOutputPath, project, "package.json");
 
         if (!fis.util.exists(packagePath)) {
             fis.log.error('unable to load package.json [%s]', packagePath)
