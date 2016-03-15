@@ -95,7 +95,7 @@ module.exports = function(ret, conf, settings, opt) {
                 })
 
                 // 渲染组件
-                tag = _content.replace(propReg, function(prop, $1) {
+                tag = _content.trim().replace(propReg, function(prop, $1) {
 
                     return propsData[$1] || "";
 
