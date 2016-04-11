@@ -97,7 +97,37 @@ module.exports = function(ret, conf, settings, opt) {
                 // 渲染组件
                 tag = _content.trim().replace(propReg, function(prop, $1) {
 
-                    return propsData[$1] || "";
+                    var keys = $1.trim().split(/\s*\|\|\s*/);
+
+                    var value = '';
+
+                    for(var i=0,len=keys.length; i<len; i++){
+
+                        var val = keys[i];
+                      
+                        value = propsData[val];
+
+                        if(value) break;
+
+
+                        // string
+                        var match = val.match(/^['"](.+)['"]$/);
+
+                        if(match && match[1]){
+                            value = match[1];
+                            break;
+                        }
+
+
+                        // Number
+                        if(/^\d+$/.test(val)){
+                            value = val;
+                            break;
+                        }
+
+                    }
+
+                    return value || "";
 
                 })
 
