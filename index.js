@@ -2,6 +2,8 @@ var path = require("path");
 
 var projectPath = fis.project.getProjectPath();
 
+var curProject = path.basename(projectPath);
+
 //匹配标签的属性和值 k=v
 var prostr = /(\S+)\s*\=\s*("[^"]*")|('[^']*')/gi;
 // 获取属性对象
@@ -30,9 +32,11 @@ var propReg = /{{([^{}]+)}}/gmi;
 
 module.exports = function(ret, conf, settings, opt) {
 
+
+
     var tagName = settings.tagName,
         mapOutputPath = settings.mapOutputPath,
-         packageOutputPath = settings.packageOutputPath;
+        packageOutputPath = settings.packageOutputPath;
 
 
     // 匹配组件标签
@@ -40,26 +44,6 @@ module.exports = function(ret, conf, settings, opt) {
 
     var pattern = new RegExp(regString, "gim");
 
-
-    var res = ret.map["res"];
-
-    // 已存在的项目
-    var project = {};
-
-    Object.keys(res).forEach(function(key, index) {
-        var namespace = key.split(":")[0];
-        project[namespace] = true;
-    });
-
-
-    // 合并跨项目资源表
-    Object.keys(res).forEach(function(key, index) {
-        var id = res[key];
-
-        if (id.extras && id.extras.isPage) {
-            comboMap(id["deps"]);
-        }
-    });
 
     // 组件渲染
     fis.util.map(ret.src, function(subpath, file) {
@@ -101,26 +85,26 @@ module.exports = function(ret, conf, settings, opt) {
 
                     var value = '';
 
-                    for(var i=0,len=keys.length; i<len; i++){
+                    for (var i = 0, len = keys.length; i < len; i++) {
 
                         var val = keys[i];
-                      
+
                         value = propsData[val];
 
-                        if(value) break;
+                        if (value) break;
 
 
                         // string
                         var match = val.match(/^['"](.+)['"]$/);
 
-                        if(match && match[1]){
+                        if (match && match[1]) {
                             value = match[1];
                             break;
                         }
 
 
                         // Number
-                        if(/^\d+$/.test(val)){
+                        if (/^\d+$/.test(val)) {
                             value = val;
                             break;
                         }
@@ -148,39 +132,37 @@ module.exports = function(ret, conf, settings, opt) {
     }
 
 
-    function comboMap(deps) {
-        deps && deps.forEach(function(dep, index) {
 
-            var namespace = dep.split(":")[0];
+    // 合并common资源表
+    comboMap();
 
-            if (project[namespace]) return;
+    function comboMap() {
+        // common 自身不需要合并
+        if (curProject == "common") return;
 
-            // 跨系统获取资源依赖表
-            var ohterDeps = requireOhteProjectDeps(namespace, dep);
+        //合并资源依赖表 
+        var curMap = ret.map["res"];
 
-            extend(res, ohterDeps["res"]);
+        // 跨系统获取资源依赖表
+        var commonMap = requireCommonMap().res;
 
-            project[namespace] = true;
+        extend(curMap, commonMap);
 
-        })
     }
 
-
-
-
     // 获取其他系统的依赖表
-    function requireOhteProjectDeps(project, dep) {
+    function requireCommonMap() {
 
 
         var media = fis.project.currentMedia() || "dev";
 
 
         // 解析跨系统资源依赖表路径
-        var mapPath = path.resolve(mapOutputPath, project, "map.json");
+        var mapPath = path.resolve(mapOutputPath, "common", "map.json");
 
 
         if (!fis.util.exists(mapPath)) {
-            fis.log.error('unable to load map.json [%s]', mapPath)
+            fis.log.error('找不到common系统的map.json，尝试先编译common子系统[%s]', mapPath)
         }
 
         // 获取跨系统获取资源依赖表
@@ -189,6 +171,6 @@ module.exports = function(ret, conf, settings, opt) {
         return map;
     }
 
- 
+
 
 }
