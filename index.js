@@ -174,10 +174,9 @@ module.exports = function(ret, conf, settings, opt) {
 
         var media = fis.project.currentMedia() || "dev";
 
-        var version = getProjectVersion(project);
 
         // 解析跨系统资源依赖表路径
-        var mapPath = path.resolve(mapOutputPath, project, version, "map.json");
+        var mapPath = path.resolve(mapOutputPath, project, "map.json");
 
 
         if (!fis.util.exists(mapPath)) {
@@ -190,19 +189,6 @@ module.exports = function(ret, conf, settings, opt) {
         return map;
     }
 
-    // 获取指定项目的版本
-    function getProjectVersion(project) {
-
-
-        var packagePath = path.resolve(packageOutputPath, project, "package.json");
-
-        if (!fis.util.exists(packagePath)) {
-            fis.log.error('unable to load package.json [%s]', packagePath)
-        }
-
-        var version = require(packagePath).version;
-
-        return version;
-    }
+ 
 
 }
