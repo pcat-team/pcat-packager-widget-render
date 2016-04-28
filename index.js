@@ -5,7 +5,7 @@ var projectPath = fis.project.getProjectPath();
 var curProject = path.basename(projectPath);
 
 //匹配标签的属性和值 k=v
-var prostr = /(\S+)\s*\=\s*("[^"]*")|('[^']*')/gi;
+var prostr = /(\S+)\s*\=\s*(("[^"]*")|('[^']*'))/gi;
 // 获取属性对象
 function getPropsObj(props) {
     var obj = {};
