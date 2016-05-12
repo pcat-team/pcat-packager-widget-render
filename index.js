@@ -2,7 +2,7 @@ var path = require("path");
 
 var projectPath = fis.project.getProjectPath();
 
-var curProject = path.basename(projectPath);
+var curProject = require(path.resolve(projectPath,"package.json")).name;
 
 //匹配标签的属性和值 k=v
 var prostr = /(\S+)\s*\=\s*(("[^"]*")|('[^']*'))/gi;
