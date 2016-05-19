@@ -5,7 +5,7 @@ var projectPath = fis.project.getProjectPath();
 var curProject = require(path.resolve(projectPath,"package.json")).name;
 
 //匹配标签的属性和值 k=v
-var prostr = /(\S+)\s*\=\s*(("[^"]*")|('[^']*'))/gi;
+var prostr = /(\S+)\s*\=\s*(("[^"]*")|((\\")[^(\\")]*(\\"))|('[^']*'))/gi;
 // 获取属性对象
 function getPropsObj(props) {
     var obj = {};
@@ -33,7 +33,6 @@ var propReg = /{{([^{}]+)}}/gmi;
 module.exports = function(ret, conf, settings, opt) {
 
 
-
     var tagName = settings.tagName,
         mapOutputPath = settings.mapOutputPath,
         packageOutputPath = settings.packageOutputPath;
@@ -49,7 +48,9 @@ module.exports = function(ret, conf, settings, opt) {
     fis.util.map(ret.src, function(subpath, file) {
         if (file.isPage) {
 
-            var content = render(file.getContent());
+           var html = (file.getContent());
+
+            var content = render(html);
 
             file.setContent(content);
 
