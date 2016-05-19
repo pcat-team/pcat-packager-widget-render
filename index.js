@@ -11,7 +11,7 @@ function getPropsObj(props) {
     var obj = {};
 
     if (props) {
-        var propsArr = props.trim().match(prostr);
+        var propsArr = props.replace(/\\/g,"").trim().match(prostr);
 
         obj = require("querystring").parse(propsArr.join("&").replace(/["']/g, ""));
 
@@ -61,6 +61,7 @@ module.exports = function(ret, conf, settings, opt) {
 
     function render(content) {
 
+
         content = content.replace(pattern, function(tag, $1, $2, $3, $4, $5, $6) {
 
             if (tag) {
@@ -81,6 +82,8 @@ module.exports = function(ret, conf, settings, opt) {
 
                 // 渲染组件
                 tag = _content.trim().replace(propReg, function(prop, $1) {
+
+                   
 
                     var keys = $1.trim().split(/\s*\|\|\s*/);
 
@@ -111,6 +114,8 @@ module.exports = function(ret, conf, settings, opt) {
                         }
 
                     }
+
+                   
 
                     return value || "";
 
